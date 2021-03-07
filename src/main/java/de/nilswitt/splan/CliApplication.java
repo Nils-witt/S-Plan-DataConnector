@@ -5,7 +5,7 @@
 package de.nilswitt.splan;
 
 import de.nilswitt.splan.FileHandlers.*;
-import de.nilswitt.splan.connectors.Api;
+import de.nilswitt.splan.connectors.ApiConnector;
 import de.nilswitt.splan.connectors.ConfigConnector;
 import de.nilswitt.splan.connectors.FileSystemConnector;
 import de.nilswitt.splan.dataModels.Config;
@@ -23,7 +23,7 @@ public class CliApplication {
     private StundenplanUntis stundenplanUntis;
     private CustomWatcher customWatcher;
     private Config config;
-    private Api api;
+    private ApiConnector api;
     private Thread watcherThread;
 
 
@@ -49,13 +49,13 @@ public class CliApplication {
             return;
         }
         //validates the Api access token
-        if (!Api.verifyBearer(config.getBearer(), config.getUrl())) {
+        if (!ApiConnector.verifyBearer(config.getBearer(), config.getUrl())) {
             //Falls nicht config null setzen.
             logger.warn("Api token invalid");
             throw new InvalidCredentialsException();
         }
 
-        api = new Api(config);
+        api = new ApiConnector(config);
 
         vertretungsplan = new Vertretungsplan(api);
         stundenplan = new Stundenplan(api);

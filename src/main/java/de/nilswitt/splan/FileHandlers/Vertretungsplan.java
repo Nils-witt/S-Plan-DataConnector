@@ -6,7 +6,7 @@ package de.nilswitt.splan.FileHandlers;
 
 import com.google.gson.Gson;
 import de.nilswitt.splan.Utils;
-import de.nilswitt.splan.connectors.Api;
+import de.nilswitt.splan.connectors.ApiConnector;
 import de.nilswitt.splan.connectors.ConfigConnector;
 import de.nilswitt.splan.dataModels.Aufsicht;
 import de.nilswitt.splan.dataModels.Course;
@@ -27,10 +27,10 @@ public class Vertretungsplan {
     private final Utils utils = new Utils();
     private final List<VertretungsLesson> lessons = new ArrayList<>();
     private final List<Aufsicht> aufsichten = new ArrayList<>();
-    private final Api api;
+    private final ApiConnector api;
     private final Gson gson = new Gson();
 
-    public Vertretungsplan(Api api) {
+    public Vertretungsplan(ApiConnector api) {
         this.api = api;
     }
 

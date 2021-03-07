@@ -17,15 +17,15 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
-public class Api {
-    private static final Logger logger = LogManager.getLogger(Api.class);
+public class ApiConnector {
+    private static final Logger logger = LogManager.getLogger(ApiConnector.class);
     private final OkHttpClient client;
     private final Config config;
     private final Gson gson = new Gson();
     private final MediaType mediaType = MediaType.parse("application/json");
 
 
-    public Api(Config config) {
+    public ApiConnector(Config config) {
         this.config = config;
         this.client = new OkHttpClient.Builder()
                 .connectTimeout(10, TimeUnit.SECONDS)

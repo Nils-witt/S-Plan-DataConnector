@@ -4,7 +4,7 @@
 
 package de.nilswitt.splan.FileHandlers;
 
-import de.nilswitt.splan.connectors.Api;
+import de.nilswitt.splan.connectors.ApiConnector;
 import de.nilswitt.splan.dataModels.Klausur;
 import de.nilswitt.splan.dataModels.VertretungsLesson;
 import org.apache.logging.log4j.LogManager;
@@ -20,13 +20,13 @@ import java.util.ArrayList;
 
 public class Klausurplan {
     private static final Logger logger = LogManager.getLogger(Klausurplan.class);
-    private final Api api;
+    private final ApiConnector api;
     private final ArrayList<String> lessonsOnServer = new ArrayList<>();
     private final ArrayList<Klausur> exams = new ArrayList<>();
     private ArrayList<VertretungsLesson> vertretungsLessons = new ArrayList<>();
     private ArrayList<String> replacementLessonIds = new ArrayList<>();
 
-    public Klausurplan(Api api) {
+    public Klausurplan(ApiConnector api) {
         this.api = api;
     }
 

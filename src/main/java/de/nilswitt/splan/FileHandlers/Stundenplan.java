@@ -5,7 +5,7 @@
 package de.nilswitt.splan.FileHandlers;
 
 import com.google.gson.Gson;
-import de.nilswitt.splan.connectors.Api;
+import de.nilswitt.splan.connectors.ApiConnector;
 import de.nilswitt.splan.dataModels.Course;
 import de.nilswitt.splan.dataModels.Lesson;
 import org.apache.logging.log4j.LogManager;
@@ -19,10 +19,10 @@ import java.util.ArrayList;
 
 public class Stundenplan {
     private static final Logger logger = LogManager.getLogger(Stundenplan.class);
-    private final Api api;
+    private final ApiConnector api;
     private final Gson gson = new Gson();
 
-    public Stundenplan(Api api) {
+    public Stundenplan(ApiConnector api) {
         this.api = api;
     }
 

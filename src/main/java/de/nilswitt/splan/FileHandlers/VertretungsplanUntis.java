@@ -5,7 +5,7 @@
 package de.nilswitt.splan.FileHandlers;
 
 import com.google.gson.Gson;
-import de.nilswitt.splan.connectors.Api;
+import de.nilswitt.splan.connectors.ApiConnector;
 import de.nilswitt.splan.dataModels.Course;
 import de.nilswitt.splan.dataModels.Lesson;
 import de.nilswitt.splan.dataModels.VertretungsLesson;
@@ -30,10 +30,10 @@ import java.util.List;
 public class VertretungsplanUntis {
     private final Logger logger = LogManager.getLogger(VertretungsplanUntis.class);
     private final ArrayList<VertretungsLesson> lessons = new ArrayList<>();
-    private final Api api;
+    private final ApiConnector api;
     private final Gson gson = new Gson();
 
-    public VertretungsplanUntis(Api api) {
+    public VertretungsplanUntis(ApiConnector api) {
 
         this.api = api;
     }
