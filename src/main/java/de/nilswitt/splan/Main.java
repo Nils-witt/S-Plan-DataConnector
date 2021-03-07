@@ -51,7 +51,6 @@ public class Main {
             cliApplication.initApplication();
             cliApplication.resetWatcherThread();
             cliApplication.getWatcherThread().start();
-            cliApplication.getCustomWatcher().fileProcessor("Untis.xlsx");
         } catch (InvalidCredentialsException invalidCredentialsException) {
             logger.error("Exited(error)");
         }
