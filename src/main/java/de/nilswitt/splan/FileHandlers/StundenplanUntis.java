@@ -17,6 +17,8 @@ import java.util.ArrayList;
 
 public class StundenplanUntis {
     private static final Logger logger = LogManager.getLogger(StundenplanUntis.class);
+    private static final String groupDelimiter = " ";
+    private static final String fileDelimiter = ",";
     private final ApiConnector api;
 
     public StundenplanUntis(ApiConnector api) {
@@ -31,8 +33,11 @@ public class StundenplanUntis {
             String line = reader.readLine();
             while (line != null) {
                 Lesson lesson = new Lesson();
-
-                String[] lessonParts = line.split(";");
+                String[] lessonParts = line.split(fileDelimiter);
+                if (lessonParts.length == 1) {
+                    logger.error("Wrong delimiter");
+                    return;
+                }
                 String className = lessonParts[1].replaceAll("\"", "");
                 String teacher = lessonParts[2].replaceAll("\"", "");
                 String group = lessonParts[3].replaceAll("\"", "");
@@ -47,7 +52,7 @@ public class StundenplanUntis {
 
                 lesson.setCourse(new Course());
                 lesson.getCourse().setGrade(className);
-                String[] groupParts = group.split("-");
+                String[] groupParts = group.split(groupDelimiter);
                 if (groupParts.length == 2) {
                     lesson.getCourse().setSubject(groupParts[0]);
 
@@ -57,7 +62,7 @@ public class StundenplanUntis {
                     }
                 }
 
-                if (!className.equals("")) {
+                if (!className.equals("") && lesson.getCourse().getGroup() != null && lesson.getCourse().getSubject() != null) {
                     lessons.add(lesson);
                 }
                 line = reader.readLine();
