@@ -7,7 +7,7 @@ package de.nilswitt.splan.dataModels;
 public class Course {
     private String grade;
     private String subject;
-    private String group;
+    private String group =  "";
 
     public String getGrade() {
         return grade;
