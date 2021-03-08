@@ -89,7 +89,7 @@ public class ApiConnector {
 
     public Lesson[] getLessons() {
         Request request = new Request.Builder()
-                .url(this.config.getUrl().concat("/timeTable/lessons"))
+                .url(this.config.getUrl().concat("/lessons"))
                 .addHeader("Authorization", "Bearer ".concat(this.config.getBearer()))
                 .build();
 
@@ -143,7 +143,7 @@ public class ApiConnector {
 
         RequestBody body = RequestBody.create(gson.toJson(lessons), mediaType);
         Request request = new Request.Builder()
-                .url(this.config.getUrl().concat("/timetable/lessons"))
+                .url(this.config.getUrl().concat("/lessons"))
                 .post(body)
                 .addHeader("Content-Type", "application/json")
                 .addHeader("Authorization", "Bearer ".concat(this.config.getBearer()))
