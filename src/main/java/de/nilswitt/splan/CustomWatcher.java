@@ -47,75 +47,19 @@ public class CustomWatcher implements Runnable {
     }
 
     /**
-     * From Runnable
-     * Adds a custom start to the new Thread
-     */
-    @Override
-    public synchronized void run() {
-        logger.info("Watcher is starting");
-        try {
-            startWatcher();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void shutdown() throws IOException {
-        logger.info("Watcher is stopping");
-        watchService.close();
-        isStarted = false;
-    }
-
-    public boolean isRunning() {
-        return isStarted;
-    }
-
-    private void startWatcher() throws IOException {
-        watchService = this.watchPath.getFileSystem().newWatchService();
-
-        //Starts the wacher and listens for creations and modifications
-        this.watchPath.register(watchService,
-                StandardWatchEventKinds.ENTRY_CREATE,
-                StandardWatchEventKinds.ENTRY_MODIFY);
-        logger.info("Watcher started");
-        isStarted = true;
-        WatchKey key;
-        try {
-            while (true) {
-                key = watchService.take();
-                for (WatchEvent<?> event : key.pollEvents()) {
-                    logger.info(event.context().toString());
-                    if (!event.context().toString().startsWith("~$")) {
-                        fileProcessor(event.context().toString());
-                    }
-
-                }
-                key.reset();
-            }
-        } catch (ClosedWatchServiceException ex) {
-            /*
-            The Exception is thrown if the watcher is already shutdown
-            Will throw if thread is stopped
-             */
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            logger.fatal(ex);
-        }
-    }
-
-    /**
      * Processes files in the watch-dir with the given name
+     *
      * @param changed {String} filename
      */
     public void fileProcessor(String changed) {
         try {
-
+            String fullFilePath = watchPath.toString().concat("/").concat(changed);
             //Determination based on file extension
             if (changed.endsWith(".xml")) {
                 DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
                 DocumentBuilder builder = factory.newDocumentBuilder();
 
-                InputStream in = Files.newInputStream(Paths.get(this.watchPath.toString().concat("/").concat(changed)));
+                InputStream in = Files.newInputStream(Paths.get(fullFilePath));
                 Document document = builder.parse(in);
 
                 String nodeName;
@@ -145,15 +89,82 @@ public class CustomWatcher implements Runnable {
                 }
 
             } else if (changed.endsWith(".xlsx")) {
-                logger.info("Excel: " + Paths.get(this.watchPath.toString().concat("/").concat(changed)));
-                ArrayList<VertretungsLesson> vertretungsLessons = vertretungsplanUntis.readXslx(Paths.get(this.watchPath.toString().concat("/").concat(changed)).toString());
+                logger.info("Excel: " + Paths.get(fullFilePath));
+                ArrayList<VertretungsLesson> vertretungsLessons = vertretungsplanUntis.readXslx(Paths.get(fullFilePath).toString());
                 vertretungsplanUntis.compareVplanLocalWithApi(vertretungsLessons);
             } else if (changed.toLowerCase().endsWith(".txt")) {
-                logger.info("DIF: " + Paths.get(this.watchPath.toString().concat("/").concat(changed)));
-                stundenplanUntis.readDocument(Paths.get(this.watchPath.toString().concat("/").concat(changed)).toString());
+                logger.info("DIF: " + Paths.get(fullFilePath));
+                stundenplanUntis.readDocument(Paths.get(fullFilePath).toString());
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * From Runnable
+     * Adds a custom start to the new Thread
+     */
+    @Override
+    public synchronized void run() {
+
+        try {
+            if(Main.onlyFiles){
+                System.out.println("PRC Files");
+                for (int i = 0; i < Main.files.length; i++) {
+                    String fileName = Main.files[i];
+                    System.out.println(fileName);
+                    fileProcessor(fileName);
+                }
+            }else {
+                logger.info("Watcher is starting");
+                startWatcher();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void shutdown() throws IOException {
+        logger.info("Watcher is stopping");
+        watchService.close();
+        isStarted = false;
+    }
+
+    public boolean isRunning() {
+        return isStarted;
+    }
+
+    private void startWatcher() throws IOException {
+        watchService = watchPath.getFileSystem().newWatchService();
+
+        //Starts the watcher and listens for creations and modifications
+        watchPath.register(watchService,
+                StandardWatchEventKinds.ENTRY_CREATE,
+                StandardWatchEventKinds.ENTRY_MODIFY);
+        logger.info("Watcher started");
+        isStarted = true;
+        WatchKey key;
+        try {
+            while (true) {
+                key = watchService.take();
+                for (WatchEvent<?> event : key.pollEvents()) {
+                    logger.info(event.context().toString());
+                    if (!event.context().toString().startsWith("~$")) {
+                        fileProcessor(event.context().toString());
+                    }
+
+                }
+                key.reset();
+            }
+        } catch (ClosedWatchServiceException ex) {
+            /*
+            The Exception is thrown if the watcher is already shutdown
+            Will throw if thread is stopped
+             */
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            logger.fatal(ex);
         }
     }
 }

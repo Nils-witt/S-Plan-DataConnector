@@ -4,6 +4,7 @@
 
 package de.nilswitt.splan.FileHandlers;
 
+import com.google.gson.Gson;
 import de.nilswitt.splan.connectors.ApiConnector;
 import de.nilswitt.splan.dataModels.Course;
 import de.nilswitt.splan.dataModels.Lesson;
@@ -20,6 +21,7 @@ public class StundenplanUntis {
     private static final String groupDelimiter = " ";
     private static final String fileDelimiter = ",";
     private final ApiConnector api;
+    private static final Gson gson = new Gson();
 
     public StundenplanUntis(ApiConnector api) {
         this.api = api;
@@ -39,7 +41,7 @@ public class StundenplanUntis {
                     return;
                 }
                 String className = lessonParts[1].replaceAll("\"", "");
-                String teacher = lessonParts[2].replaceAll("\"", "");
+                String teacher = lessonParts[2].replaceAll("\"", "").replaceAll("ö","oe").replaceAll("ü","ue").replaceAll("ä","ae");
                 String group = lessonParts[3].replaceAll("\"", "");
                 String room = lessonParts[4].replaceAll("\"", "");
                 int day = Integer.parseInt(lessonParts[5]);
@@ -57,7 +59,7 @@ public class StundenplanUntis {
                     lesson.getCourse().setSubject(groupParts[0]);
 
                     lesson.getCourse().setGroup(groupParts[1].substring(groupParts[1].length() - 1));
-                    if (groupParts[1].contains("LK")) {
+                    if (groupParts[1].contains("L")) {
                         lesson.getCourse().setGroup("L" + lesson.getCourse().getGroup());
                     }
                 }

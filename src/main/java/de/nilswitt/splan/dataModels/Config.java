@@ -7,7 +7,7 @@ package de.nilswitt.splan.dataModels;
 public class Config {
     private String bearer;
     private String url;
-    private Boolean trayNotifications;
+    private Boolean trayNotifications = false;
 
     public String getBearer() {
         return bearer;

@@ -151,6 +151,7 @@ public class ApiConnector {
 
         try {
             Response response = client.newCall(request).execute();
+            System.out.println(response.body().string());
             response.close();
         } catch (Exception e) {
             e.printStackTrace();
