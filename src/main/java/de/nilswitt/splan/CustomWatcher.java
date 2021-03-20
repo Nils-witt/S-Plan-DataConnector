@@ -47,7 +47,7 @@ public class CustomWatcher implements Runnable {
     }
 
     /**
-     * Processes files in the watch-dir with the given name
+     * Processes the file in the watch-dir with the given name
      *
      * @param changed {String} filename
      */
@@ -63,13 +63,13 @@ public class CustomWatcher implements Runnable {
                 Document document = builder.parse(in);
 
                 String nodeName;
-                //Laden der base XML node, anhand dieser kann der Inhaltstyp ermittelt werden
+                //Loading og the XML base node
                 nodeName = document.getLastChild().getNodeName();
                 if (config.getTrayNotifications()) {
                     TrayNotification.display("Änderung erkannt", "Datei: ".concat(nodeName));
                 }
 
-                //Determination based on xml root node
+                //Content determination based on xml root node
                 switch (nodeName) {
                     case "vp" -> {
                         logger.info("Vplan");
@@ -110,10 +110,8 @@ public class CustomWatcher implements Runnable {
 
         try {
             if(Main.onlyFiles){
-                System.out.println("PRC Files");
                 for (int i = 0; i < Main.files.length; i++) {
                     String fileName = Main.files[i];
-                    System.out.println(fileName);
                     fileProcessor(fileName);
                 }
             }else {
@@ -125,16 +123,28 @@ public class CustomWatcher implements Runnable {
         }
     }
 
+    /**
+     * Ends the thread graceful
+     * @throws IOException
+     */
     public void shutdown() throws IOException {
         logger.info("Watcher is stopping");
         watchService.close();
         isStarted = false;
     }
 
+    /**
+     * Returns the status of the thread running/ not running
+     * @return boolean - if the thread is running
+     */
     public boolean isRunning() {
         return isStarted;
     }
 
+    /**
+     * Starts the watch service
+     * @throws IOException
+     */
     private void startWatcher() throws IOException {
         watchService = watchPath.getFileSystem().newWatchService();
 
@@ -159,7 +169,7 @@ public class CustomWatcher implements Runnable {
             }
         } catch (ClosedWatchServiceException ex) {
             /*
-            The Exception is thrown if the watcher is already shutdown
+            The Exception is thrown if the watcher is already in shutdown
             Will throw if thread is stopped
              */
         } catch (Exception ex) {

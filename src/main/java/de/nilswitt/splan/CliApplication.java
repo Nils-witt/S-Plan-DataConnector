@@ -30,6 +30,10 @@ public class CliApplication {
     public CliApplication() {
     }
 
+    /**
+     * Sets all runtime options
+     * @throws InvalidCredentialsException
+     */
     public void initApplication() throws InvalidCredentialsException {
         //Creates the runtime directorys
         FileSystemConnector.createDataDirs();

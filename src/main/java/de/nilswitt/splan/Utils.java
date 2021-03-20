@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Utils {
+    /**
+     * List of (German) months
+     */
     private final List<String> months = new ArrayList<>();
 
     public Utils() {
