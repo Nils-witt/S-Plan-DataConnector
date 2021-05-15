@@ -33,6 +33,7 @@ public class Klausurplan {
 
     public void readDocument(Document document) {
         int length;
+        exams.clear();
 
 
         replacementLessonIds = new ArrayList<>();
@@ -48,7 +49,7 @@ public class Klausurplan {
             length = nl.getLength();
 
             for (int i = 0; i < length; i++) {
-                //Ünerprüfen, dass das Element eine Node ist
+                //Überprüfen, dass das Element eine Node ist
                 if (nl.item(i).getNodeType() == Node.ELEMENT_NODE) {
                     try {
                         Element el = (Element) nl.item(i);
